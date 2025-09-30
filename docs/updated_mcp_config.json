@@ -1,0 +1,332 @@
+{
+  "mcp_development_environment": {
+    "overview": "MCP (Model Context Protocol) servers provide specialized capabilities to AI assistants like Claude Code. This configuration is tested and working with Claude Code in VS Code.",
+    
+    "IMPORTANT_LEARNINGS": {
+      "path_requirements": "Always use absolute paths for npm-installed servers to avoid symlink issues",
+      "claude_code_compatibility": "Claude Code reads from Claude Desktop config but has specific requirements",
+      "testing_workflow": "Test each server standalone before adding to configuration",
+      "restart_requirement": "Always restart VS Code completely after config changes"
+    },
+
+    "working_base_configuration": {
+      "file_location": "~/Library/Application Support/Claude/claude_desktop_config.json",
+      "tested_config": {
+        "mcpServers": {
+          "memory": {
+            "command": "npx",
+            "args": ["-y", "@modelcontextprotocol/server-memory"],
+            "status": "ALWAYS_WORKS",
+            "notes": "Built-in, no issues"
+          },
+          "semgrep": {
+            "command": "uvx", 
+            "args": ["semgrep-mcp"],
+            "env": {
+              "SEMGREP_APP_TOKEN": "optional_but_recommended"
+            },
+            "status": "WORKING",
+            "installation": "pip install semgrep-mcp",
+            "notes": "Remove absolute path to uvx, let it find in PATH"
+          },
+          "ref-tools": {
+            "command": "/Users/USERNAME/.npm-global/bin/ref-tools-mcp",
+            "env": {
+              "REF_API_KEY": "required_for_enhanced_features"
+            },
+            "status": "WORKING", 
+            "installation": "npm install -g ref-tools-mcp",
+            "notes": "MUST use absolute path due to symlink issues with Claude Code"
+          },
+          "supabase": {
+            "command": "npx",
+            "args": [
+              "-y",
+              "@supabase/mcp-server-supabase",
+              "--read-only", 
+              "--project-ref=YOUR_PROJECT_REF"
+            ],
+            "env": {
+              "SUPABASE_ACCESS_TOKEN": "required"
+            },
+            "status": "WORKING",
+            "notes": "npx works fine for this server"
+          }
+        }
+      }
+    },
+
+    "recommended_mcp_servers": [
+      {
+        "name": "memory-server",
+        "purpose": "Knowledge graph and conversation memory",
+        "priority": "ESSENTIAL",
+        "setup_time": "0 minutes - auto-included",
+        "status": "WORKING",
+        "features": [
+          "Entity storage and relationships",
+          "Search across conversation history", 
+          "Persistent knowledge graph"
+        ],
+        "installation": "automatic"
+      },
+
+      {
+        "name": "semgrep-server",
+        "purpose": "Security and code quality analysis", 
+        "priority": "HIGH",
+        "setup_time": "10 minutes",
+        "status": "WORKING",
+        "features": [
+          "Security vulnerability detection",
+          "Code quality analysis",
+          "Custom rule scanning",
+          "SAST analysis"
+        ],
+        "installation": {
+          "command": "pip install semgrep-mcp",
+          "verification": "uvx semgrep-mcp --version",
+          "config_notes": "Use 'uvx' command, not absolute path"
+        }
+      },
+
+      {
+        "name": "ref-tools-server",
+        "purpose": "Documentation search and reference",
+        "priority": "HIGH", 
+        "setup_time": "15 minutes",
+        "status": "WORKING",
+        "features": [
+          "Web documentation search",
+          "API reference lookup",
+          "Code example search",
+          "Technical documentation access"
+        ],
+        "installation": {
+          "command": "npm install -g ref-tools-mcp",
+          "verification": "which ref-tools-mcp",
+          "config_notes": "MUST use absolute path from 'which' command"
+        }
+      },
+
+      {
+        "name": "supabase-server",
+        "purpose": "Database operations and Supabase integration",
+        "priority": "MEDIUM",
+        "setup_time": "5 minutes", 
+        "status": "WORKING",
+        "features": [
+          "Table listing and schema inspection",
+          "Query execution",
+          "Migration management", 
+          "RLS policy checking"
+        ],
+        "installation": {
+          "command": "automatic via npx",
+          "verification": "npx @supabase/mcp-server-supabase --help",
+          "config_notes": "Requires project-ref and access token"
+        }
+      },
+
+      {
+        "name": "documentation-server",
+        "purpose": "Serves project-specific documentation and patterns",
+        "priority": "HIGH",
+        "setup_time": "30 minutes",
+        "status": "RECOMMENDED_CUSTOM",
+        "features": [
+          "Project architecture reference",
+          "Component usage examples",
+          "Security patterns and GDPR requirements", 
+          "API endpoint documentation",
+          "Database schema reference"
+        ],
+        "implementation": {
+          "base": "custom filesystem server",
+          "files_to_serve": [
+            "suite/docs/ai-agent-constitution.md",
+            "suite/docs/PRD_v1.md", 
+            "suite/design/style-guide.md",
+            "./docs/component-library.md",
+            "./docs/api-patterns.md",
+            "./docs/security-guidelines.md"
+          ]
+        }
+      },
+
+      {
+        "name": "web-scraping-server", 
+        "purpose": "Handles web scraping tasks and API integrations",
+        "priority": "MEDIUM",
+        "setup_time": "1 hour",
+        "status": "CUSTOM_BUILD_REQUIRED",
+        "features": [
+          "Google Maps scraping capabilities",
+          "SERP API integration",
+          "Social media data collection",
+          "Competitor analysis automation"
+        ]
+      }
+    ],
+
+    "installation_workflow": {
+      "phase_1_core": {
+        "time_required": "30 minutes",
+        "servers": ["memory", "semgrep", "ref-tools"],
+        "immediate_benefits": [
+          "Code security analysis",
+          "Documentation lookup",
+          "Conversation memory"
+        ],
+        "commands": [
+          "pip install semgrep-mcp",
+          "npm install -g ref-tools-mcp",
+          "# Update claude_desktop_config.json",
+          "# Restart VS Code"
+        ]
+      },
+
+      "phase_2_database": {
+        "time_required": "15 minutes", 
+        "servers": ["supabase"],
+        "requirements": ["Supabase project", "Access token"],
+        "benefits": [
+          "Database inspection",
+          "Schema management",
+          "Query assistance"
+        ]
+      },
+
+      "phase_3_custom": {
+        "time_required": "2-4 hours",
+        "servers": ["documentation-server", "web-scraping-server"],
+        "benefits": [
+          "Project-specific knowledge",
+          "Automated scraping capabilities"
+        ]
+      }
+    },
+
+    "troubleshooting_guide": {
+      "common_issues": {
+        "server_not_found": {
+          "symptoms": "Tool not available in Claude Code",
+          "causes": [
+            "Incorrect path in configuration",
+            "Server not installed properly",
+            "VS Code not restarted"
+          ],
+          "solutions": [
+            "Verify with 'which command-name'",
+            "Use absolute path in config",
+            "Restart VS Code completely"
+          ]
+        },
+        
+        "symlink_issues": {
+          "symptoms": "Server installed but not working",
+          "specific_to": "npm-installed servers",
+          "solution": "Use absolute path from 'which' command",
+          "example": "'/Users/username/.npm-global/bin/ref-tools-mcp'"
+        },
+
+        "permission_denied": {
+          "symptoms": "Cannot install global npm packages",
+          "solution": "Setup npm global directory",
+          "commands": [
+            "mkdir ~/.npm-global",
+            "npm config set prefix '~/.npm-global'",
+            "export PATH=~/.npm-global/bin:$PATH"
+          ]
+        }
+      },
+
+      "verification_commands": {
+        "check_installation": [
+          "uvx semgrep-mcp --version",
+          "which ref-tools-mcp", 
+          "npx @supabase/mcp-server-supabase --help"
+        ],
+        "test_config": [
+          "cat ~/Library/Application\\ Support/Claude/claude_desktop_config.json",
+          "# Test each server in Claude Code"
+        ]
+      }
+    },
+
+    "vs_code_integration": {
+      "required_extensions": [
+        {
+          "name": "Claude Dev",
+          "id": "anthropic.claude-dev", 
+          "purpose": "Primary AI assistant with MCP support",
+          "status": "REQUIRED"
+        }
+      ],
+
+      "testing_commands": {
+        "memory": "memory:search_nodes query: 'test'",
+        "semgrep": "semgrep --version",
+        "ref_tools": "ref-tools:ref_search_documentation query: 'javascript'", 
+        "supabase": "supabase:list_tables"
+      }
+    },
+
+    "sample_workflows": {
+      "security_audit": {
+        "prompt": "Audit this codebase for security vulnerabilities and GDPR compliance",
+        "mcp_servers_used": [
+          "semgrep: Scans for security issues",
+          "ref-tools: Gets security best practices",
+          "memory: Stores findings for future reference"
+        ],
+        "expected_output": "Detailed security report with remediation suggestions"
+      },
+
+      "documentation_lookup": {
+        "prompt": "Find documentation for React useEffect hook with cleanup",
+        "mcp_servers_used": [
+          "ref-tools: Searches React documentation",
+          "memory: Stores useful patterns"
+        ],
+        "expected_output": "Comprehensive useEffect examples with cleanup patterns"
+      },
+
+      "database_schema_review": {
+        "prompt": "Review my Supabase database schema and suggest optimizations",
+        "mcp_servers_used": [
+          "supabase: Lists tables and schema",
+          "memory: Tracks schema evolution", 
+          "semgrep: Checks for security issues in queries"
+        ],
+        "expected_output": "Schema analysis with optimization recommendations"
+      }
+    },
+
+    "best_practices": [
+      "Always use absolute paths for npm-installed MCP servers",
+      "Test each server standalone before configuring",
+      "Restart VS Code completely after configuration changes",
+      "Keep backup of working configuration",
+      "Use environment variables for API keys",
+      "Verify server installation with 'which' command",
+      "Never use 'sudo' for npm global installs"
+    ],
+
+    "development_commands": {
+      "install_core_servers": [
+        "pip install semgrep-mcp",
+        "npm install -g ref-tools-mcp"
+      ],
+      "verify_installation": [
+        "uvx semgrep-mcp --version",
+        "which ref-tools-mcp",
+        "ref-tools-mcp --help"
+      ],
+      "config_management": [
+        "cat ~/Library/Application\\ Support/Claude/claude_desktop_config.json",
+        "cp ~/Library/Application\\ Support/Claude/claude_desktop_config.json ~/backup_config.json"
+      ]
+    }
+  }
+}
