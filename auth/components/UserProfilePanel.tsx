@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -9,7 +8,7 @@ export function UserProfilePanel() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [profile, setProfile] = useState<any>(null);
-  const supabase = createClientComponentClient();
+  // Supabase client not required here directly; profile is fetched via API route
 
   const load = async () => {
     setLoading(true);
@@ -34,8 +33,13 @@ export function UserProfilePanel() {
   };
 
   const signOut = async () => {
-    const { AuthService } = await import('@/lib/auth/auth-service');
-    AuthService.signOut();
+    // fallback signout: call API route if present, otherwise just reload
+    try {
+      await fetch('/api/auth/signout', { method: 'POST' });
+    } catch (e) {
+      // ignore network errors in fallback
+    }
+    window.location.href = '/';
   };
 
   return (
@@ -72,4 +76,3 @@ export function UserProfilePanel() {
     </Card>
   );
 }
-

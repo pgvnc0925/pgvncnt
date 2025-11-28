@@ -1,6 +1,3 @@
-import { siStripe } from "simple-icons/icons";  // icona Stripe da SimpleIcons
-import { getSimpleIcon } from "@/lib/getSimpleIcon";
-
 export type LogoItem = {
   id: string;
   name: string;
@@ -46,7 +43,7 @@ export const LOGOS: LogoItem[] = [
   {
     id: "stripe",
     name: "Stripe",
-    src: getSimpleIcon(siStripe),   // qui usi SimpleIcons
+    src: "/logos/stripe.svg",
     href: "https://stripe.com",
     alt: "Stripe logo",
     license: "Trademarked; see Stripe brand guidelines.",
