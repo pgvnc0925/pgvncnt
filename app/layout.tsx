@@ -1,4 +1,6 @@
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "./providers";
 
 export const metadata = {
@@ -15,6 +17,8 @@ export default function RootLayout({
     <html lang="it" suppressHydrationWarning>
       <body>
         <ThemeProvider>{children}</ThemeProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -1,5 +1,5 @@
-import { Header } from "@/components/layout/header"
-import { Footer } from "@/components/layout/footer"
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
 
 export default function TerminiServizioPage() {
   return (
@@ -8,195 +8,246 @@ export default function TerminiServizioPage() {
 
       <main className="flex-grow">
         <div className="container mx-auto px-6 py-16 max-w-4xl">
-          <h1 className="text-4xl font-bold mb-8">Termini di Servizio</h1>
+          <h1 className="text-4xl font-bold mb-8">TERMINI DI SERVIZIO</h1>
 
           <div className="prose prose-lg max-w-none space-y-8">
-            <p className="text-muted-foreground">
-              Ultimo aggiornamento: {new Date().toLocaleDateString('it-IT')}
-            </p>
+            <p className="text-muted-foreground">Ultimo aggiornamento: 08/12/2025</p>
 
             <section className="space-y-4">
               <h2 className="text-2xl font-bold">1. Accettazione dei Termini</h2>
               <p className="leading-relaxed">
-                Utilizzando Pagine Vincenti (il "Servizio"), accetti questi Termini di Servizio.
-                Se non accetti questi termini, non utilizzare il Servizio. Ci riserviamo il diritto
-                di modificare questi termini in qualsiasi momento.
+                Utilizzando Pagine Vincenti (il “Servizio”), accetti integralmente questi Termini. Se non sei d’accordo, non utilizzare il Servizio. Ci riserviamo il diritto di aggiornare i Termini in qualsiasi momento, con comunicazione agli utenti registrati.
               </p>
             </section>
+
+            <hr className="border-border" />
 
             <section className="space-y-4">
               <h2 className="text-2xl font-bold">2. Descrizione del Servizio</h2>
-              <p className="leading-relaxed">
-                Pagine Vincenti è una piattaforma che offre strumenti interattivi gratuiti basati
-                su framework di management e marketing. Il Servizio include:
-              </p>
+              <p className="leading-relaxed">Pagine Vincenti è una piattaforma che offre:</p>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Tool interattivi per decisioni business, marketing e strategia</li>
-                <li>Generazione di output e report personalizzati</li>
-                <li>Assistenza AI contestuale (limitata per utenti non registrati)</li>
-                <li>Salvataggio sessioni per utenti registrati</li>
-                <li>Contenuti educativi e riferimenti a libri</li>
+                <li>strumenti interattivi basati su framework di business, marketing e management</li>
+                <li>generazione di output tramite modelli AI di terze parti</li>
+                <li>percorsi educativi e contenuti formativi</li>
+                <li>salvataggio progressi e sessioni per utenti registrati</li>
+                <li>risorse gratuite e premium</li>
               </ul>
+              <p className="leading-relaxed">Il Servizio è in continua evoluzione.</p>
             </section>
+
+            <hr className="border-border" />
 
             <section className="space-y-4">
               <h2 className="text-2xl font-bold">3. Account Utente</h2>
-              <p className="leading-relaxed">
-                Per alcune funzionalità è necessario registrarsi. Sei responsabile di:
-              </p>
+              <p className="leading-relaxed">Per accedere a specifiche funzionalità può essere richiesto un account. L’utente è responsabile di:</p>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Fornire informazioni accurate e veritiere</li>
-                <li>Mantenere la sicurezza delle tue credenziali</li>
-                <li>Tutte le attività svolte con il tuo account</li>
-                <li>Notificarci immediatamente in caso di accesso non autorizzato</li>
+                <li>fornire informazioni accurate</li>
+                <li>mantenere segrete le proprie credenziali</li>
+                <li>tutte le attività svolte tramite il proprio account</li>
+                <li>notificarci eventuali accessi non autorizzati</li>
               </ul>
-              <p className="leading-relaxed mt-4">
-                Devi avere almeno 18 anni per registrarti.
-              </p>
+              <p className="leading-relaxed">È necessario avere almeno 18 anni. Possiamo sospendere o terminare account in caso di violazione dei Termini.</p>
             </section>
+
+            <hr className="border-border" />
 
             <section className="space-y-4">
               <h2 className="text-2xl font-bold">4. Uso Consentito</h2>
-              <p className="leading-relaxed">Ti è consentito:</p>
+              <p className="leading-relaxed">È consentito:</p>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Utilizzare i tool per scopi professionali e personali legittimi</li>
-                <li>Scaricare output e report per uso personale o aziendale</li>
-                <li>Condividere link al Servizio</li>
+                <li>utilizzare i tool per scopi personali o professionali legittimi</li>
+                <li>scaricare gli output per uso personale o aziendale</li>
+                <li>condividere link al Servizio</li>
               </ul>
             </section>
 
+            <hr className="border-border" />
+
             <section className="space-y-4">
               <h2 className="text-2xl font-bold">5. Uso Vietato</h2>
-              <p className="leading-relaxed">NON ti è consentito:</p>
+              <p className="leading-relaxed">NON è consentito:</p>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Utilizzare il Servizio per scopi illegali o non autorizzati</li>
-                <li>Copiare, modificare o distribuire il codice sorgente del Servizio</li>
-                <li>Effettuare scraping automatizzato o sovraccarico del sistema</li>
-                <li>Tentare di aggirare misure di sicurezza o rate limiting</li>
-                <li>Rivendere o commercializzare gli output senza attribuzione</li>
-                <li>Utilizzare il Servizio per competere direttamente con noi</li>
-                <li>Caricare contenuti offensivi, diffamatori o che violano diritti di terzi</li>
+                <li>utilizzare il Servizio per attività illegali, diffamatorie o dannose</li>
+                <li>generare contenuti che violano leggi, privacy o diritti di terzi</li>
+                <li>reverse engineering, copia, modifica o distribuzione del codice</li>
+                <li>scraping automatizzato o overload dei server</li>
+                <li>aggirare misure di sicurezza o limiti di utilizzo</li>
+                <li>utilizzare il Servizio per competere direttamente con noi</li>
+                <li>inserire dati personali di terzi senza consenso</li>
+                <li>usare il Servizio per creare output professionali spacciandoli come consulenza certificata</li>
               </ul>
             </section>
+
+            <hr className="border-border" />
 
             <section className="space-y-4">
               <h2 className="text-2xl font-bold">6. Proprietà Intellettuale</h2>
               <p className="leading-relaxed">
-                <strong>Contenuti del Servizio:</strong> Tutti i contenuti, design, loghi, tool,
-                codice sorgente e materiali di Pagine Vincenti sono di proprietà di Timoteo Pasquali
-                o dei rispettivi licenzianti e sono protetti da copyright e altre leggi sulla
-                proprietà intellettuale.
+                <strong>Contenuti del Servizio:</strong> Tutti i contenuti, strumenti, design, codice e materiali sono proprietà di Timoteo Pasquali o dei rispettivi licenzianti.
               </p>
-              <p className="leading-relaxed mt-4">
-                <strong>I tuoi contenuti:</strong> Mantieni la proprietà degli input che inserisci
-                nei tool. Garantisci di avere il diritto di utilizzare tali contenuti. Concedendoci
-                una licenza limitata per elaborare i tuoi input e generare output.
+              <p className="leading-relaxed">
+                <strong>Contenuti inseriti dall’utente:</strong> Rimangono di tua proprietà. Dichiari di avere il diritto di inserirli. Ci concedi una licenza limitata per elaborarli e generare gli output richiesti.
               </p>
-              <p className="leading-relaxed mt-4">
-                <strong>Output generati:</strong> Gli output generati dai tool appartengono a te,
-                ma riconosciamo che sono basati su framework di terze parti citati nel tool.
+              <p className="leading-relaxed">
+                <strong>Output generati:</strong> Gli output sono utilizzabili dall’utente, ma: non garantiamo originalità, accuratezza o validità; possono contenere errori derivanti da modelli AI esterni; non costituiscono consulenza professionale; l’utente si assume piena responsabilità del loro uso.
               </p>
             </section>
 
+            <hr className="border-border" />
+
             <section className="space-y-4">
-              <h2 className="text-2xl font-bold">7. Limitazioni del Servizio</h2>
-              <p className="leading-relaxed">
-                Il Servizio è fornito "così com'è". Non garantiamo che:
-              </p>
+              <h2 className="text-2xl font-bold">7. Utilizzo di API AI (OpenAI, Anthropic e altri)</h2>
+              <p className="leading-relaxed">Per alcune funzionalità utilizziamo API di terze parti (es. OpenAI, Anthropic). Gli output generati:</p>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Il Servizio sarà sempre disponibile, senza interruzioni o errori</li>
-                <li>Gli output siano accurati, completi o adatti alle tue esigenze</li>
-                <li>Gli output sostituiscano consulenza professionale</li>
+                <li>possono essere imprecisi, incompleti o inappropriati</li>
+                <li>non devono essere usati come sostituti di valutazioni professionali</li>
+                <li>non costituiscono pareri legali, fiscali, finanziari o sanitari</li>
               </ul>
-              <p className="leading-relaxed mt-4">
-                Gli strumenti sono educativi e di supporto decisionale, ma non sostituiscono
-                giudizio professionale, consulenza legale, fiscale o finanziaria.
+              <p className="leading-relaxed">Non siamo responsabili di eventuali danni derivanti dall’uso degli output AI.</p>
+            </section>
+
+            <hr className="border-border" />
+
+            <section className="space-y-4">
+              <h2 className="text-2xl font-bold">8. Limitazioni del Servizio</h2>
+              <p className="leading-relaxed">
+                Il Servizio è fornito “così com’è” e non garantiamo che: sarà sempre disponibile senza errori o interruzioni; gli output siano accurati o adatti a decisioni critiche; i dati salvati vengano mantenuti indefinitamente; il Servizio soddisfi esigenze specifiche. Possiamo modificare, sospendere o interrompere funzioni in qualsiasi momento.
               </p>
             </section>
 
+            <hr className="border-border" />
+
             <section className="space-y-4">
-              <h2 className="text-2xl font-bold">8. Rate Limiting e Restrizioni</h2>
-              <p className="leading-relaxed">
-                Ci riserviamo il diritto di:
-              </p>
+              <h2 className="text-2xl font-bold">9. Rate Limiting e Restrizioni</h2>
+              <p className="leading-relaxed">Possiamo:</p>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Limitare il numero di richieste AI per utenti non registrati</li>
-                <li>Sospendere o terminare account che violano questi Termini</li>
-                <li>Modificare, sospendere o interrompere parti del Servizio in qualsiasi momento</li>
-              </ul>
-            </section>
-
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold">9. Link Affiliati</h2>
-              <p className="leading-relaxed">
-                Il Servizio contiene link affiliati Amazon e altri partner. Quando acquisti tramite
-                questi link, riceviamo una commissione senza costi extra per te. Questo ci aiuta
-                a mantenere il Servizio gratuito. Non siamo responsabili per prodotti o servizi
-                acquistati tramite link di terze parti.
-              </p>
-            </section>
-
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold">10. Limitazione di Responsabilità</h2>
-              <p className="leading-relaxed">
-                Nella misura massima consentita dalla legge:
-              </p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Non siamo responsabili per danni diretti, indiretti, incidentali o consequenziali</li>
-                <li>Non siamo responsabili per perdite di profitti, dati o opportunità di business</li>
-                <li>La nostra responsabilità totale non supererà €100 o l'importo pagato negli ultimi 12 mesi (se applicabile)</li>
+                <li>limitare richieste AI per utenti non registrati</li>
+                <li>applicare restrizioni di sicurezza</li>
+                <li>sospendere utenti che abusano del Servizio</li>
               </ul>
             </section>
 
+            <hr className="border-border" />
+
             <section className="space-y-4">
-              <h2 className="text-2xl font-bold">11. Indennizzo</h2>
+              <h2 className="text-2xl font-bold">10. Link Affiliati</h2>
               <p className="leading-relaxed">
-                Accetti di indennizzarci da qualsiasi reclamo, danno, perdita o spesa (incluse
-                spese legali) derivante da:
+                Il Servizio contiene link affiliati (Amazon e altri). Quando clicchi su un link esterno, eventuali cookie vengono gestiti esclusivamente dal sito di destinazione. Non siamo responsabili per prodotti o servizi acquistati tramite link di terze parti.
               </p>
+            </section>
+
+            <hr className="border-border" />
+
+            <section className="space-y-4">
+              <h2 className="text-2xl font-bold">11. Limitazione di Responsabilità</h2>
+              <p className="leading-relaxed">Nella massima misura consentita dalla legge:</p>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Tuo uso improprio del Servizio</li>
-                <li>Violazione di questi Termini</li>
-                <li>Violazione di diritti di terze parti</li>
+                <li>escludiamo responsabilità per danni diretti o indiretti</li>
+                <li>non rispondiamo per perdite economiche, dati, opportunità o profitti</li>
+                <li>la responsabilità massima non supererà €100 o l’importo pagato negli ultimi 12 mesi</li>
               </ul>
             </section>
 
+            <hr className="border-border" />
+
             <section className="space-y-4">
-              <h2 className="text-2xl font-bold">12. Modifiche e Interruzione</h2>
-              <p className="leading-relaxed">
-                Ci riserviamo il diritto di:
-              </p>
+              <h2 className="text-2xl font-bold">12. Indennizzo</h2>
+              <p className="leading-relaxed">L’utente accetta di indennizzarci in caso di reclami derivanti da:</p>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Modificare questi Termini in qualsiasi momento (con notifica via email)</li>
-                <li>Modificare o interrompere il Servizio (temporaneamente o permanentemente)</li>
-                <li>Rifiutare il servizio a chiunque per qualsiasi motivo</li>
+                <li>uso improprio del Servizio</li>
+                <li>violazione dei Termini</li>
+                <li>inserimento di contenuti non autorizzati o dannosi</li>
               </ul>
             </section>
 
+            <hr className="border-border" />
+
             <section className="space-y-4">
-              <h2 className="text-2xl font-bold">13. Legge Applicabile</h2>
+              <h2 className="text-2xl font-bold">13. Interruzione dell’Accesso</h2>
+              <p className="leading-relaxed">Possiamo sospendere o terminare l’accesso:</p>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>per violazione dei Termini</li>
+                <li>per motivi tecnici o sicurezza</li>
+                <li>per cessazione del Servizio</li>
+              </ul>
+              <p className="leading-relaxed">Clausole relative a proprietà intellettuale, limitazione di responsabilità e indennizzo sopravvivono alla chiusura dell’account.</p>
+            </section>
+
+            <hr className="border-border" />
+
+            <section className="space-y-4">
+              <h2 className="text-2xl font-bold">14. Legge Applicabile</h2>
               <p className="leading-relaxed">
-                Questi Termini sono regolati dalla legge italiana. Qualsiasi controversia sarà
-                di competenza esclusiva del Foro di [Città], Italia.
+                Questi Termini sono regolati dalla legge italiana. Forum esclusivo: Foro di La Spezia.
               </p>
             </section>
 
+            <hr className="border-border" />
+
             <section className="space-y-4">
-              <h2 className="text-2xl font-bold">14. Contatti</h2>
+              <h2 className="text-2xl font-bold">15. Contatti</h2>
               <p className="leading-relaxed">
-                Per domande su questi Termini, contattaci a:<br />
-                <strong>Email:</strong> info@paginevincenti.it<br />
+                Per domande:<br />
+                📧 <strong>info@paginevincenti.it</strong><br />
                 <strong>Titolare:</strong> Timoteo Pasquali
               </p>
             </section>
 
-            <section className="space-y-4 bg-muted/30 p-6 rounded-lg">
-              <h2 className="text-2xl font-bold">Riepilogo (non vincolante)</h2>
+            <hr className="border-border" />
+
+            <section className="space-y-4">
+              <h2 className="text-2xl font-bold">16. Pagamenti, Contenuti Digitali e Politica di Rimborso</h2>
+
+              <h3 className="text-xl font-semibold">16.1 Modalità di pagamento</h3>
               <p className="leading-relaxed">
-                In sintesi: usa il Servizio in buona fede per scopi legittimi. Non copiare,
-                non abusare del sistema, non rivendere. Gli output sono tuoi, ma non sostituiscono
-                consulenza professionale. Il Servizio è gratuito e "as-is". Rispettiamo la tua
-                privacy (vedi Privacy Policy). Guadagniamo tramite affiliazioni Amazon.
+                I pagamenti vengono elaborati tramite Stripe. Non trattiamo direttamente dati di carta di credito.
+              </p>
+
+              <h3 className="text-xl font-semibold">16.2 Prodotti digitali senza diritto di recesso</h3>
+              <p className="leading-relaxed">
+                Ai sensi dell’art. 59, comma 1, lett. o) del Codice del Consumo, il diritto di recesso non si applica ai contenuti digitali forniti tramite download o accesso immediato, quando l’esecuzione è iniziata con l’esplicito consenso del consumatore e con l’accettazione della perdita del diritto di recesso.
+              </p>
+              <p className="leading-relaxed">Pertanto, per:</p>
+              <ul className="list-disc pl-6 space-y-1">
+                <li>PDF</li>
+                <li>audio</li>
+                <li>checklist</li>
+                <li>riassunti</li>
+                <li>quiz premium</li>
+                <li>materiali scaricabili</li>
+                <li>tool interattivi</li>
+                <li>app a pagamento</li>
+                <li>report generati</li>
+                <li>accessi una tantum</li>
+              </ul>
+              <p className="leading-relaxed">
+                👉 Non è previsto alcun rimborso, anche in caso di utilizzo parziale, poiché l’utente riceve immediatamente il contenuto digitale richiesto.
+              </p>
+
+              <h3 className="text-xl font-semibold">16.3 Percorsi di apprendimento e programmi strutturati</h3>
+              <p className="leading-relaxed">
+                L’acquisto di percorsi formativi digitali (intermedio, avanzato, percorsi guidati, ecc.) consente l’accesso immediato ad almeno una parte dei contenuti premium (es. PDF, checklist, audio, quiz, app collegate).
+              </p>
+              <p className="leading-relaxed">
+                Con l’accesso ai primi contenuti, l’utente accetta di iniziare immediatamente la fruizione del servizio digitale e conferma la perdita del diritto di recesso, anche se ulteriori materiali vengono rilasciati progressivamente nel tempo.
+              </p>
+              <p className="leading-relaxed">Non è previsto rimborso per percorsi formativi digitali acquistati.</p>
+
+              <h3 className="text-xl font-semibold">16.4 Nessuna garanzia di risultati</h3>
+              <p className="leading-relaxed">
+                Gli output generati da tool e percorsi formativi non garantiscono risultati specifici in ambito professionale, economico o personale.
+              </p>
+
+              <h3 className="text-xl font-semibold">16.5 Casi eccezionali</h3>
+              <p className="leading-relaxed">
+                Eventuali rimborsi possono essere valutati solo in caso di impossibilità tecnica documentata e non risolvibile di accedere al contenuto acquistato.
+              </p>
+            </section>
+
+            <section className="space-y-4 bg-muted/30 p-6 rounded-lg">
+              <h2 className="text-2xl font-bold">Riepilogo non vincolante</h2>
+              <p className="leading-relaxed">
+                Usa il Servizio con buon senso. Gli output AI sono strumenti di supporto, non consulenza professionale. Rispettiamo la tua privacy. Possiamo modificare il Servizio quando necessario.
               </p>
             </section>
           </div>
@@ -205,5 +256,5 @@ export default function TerminiServizioPage() {
 
       <Footer />
     </div>
-  )
+  );
 }

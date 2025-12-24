@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-import matter from "gray-matter";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
@@ -9,9 +8,14 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { books } from "@/data/mock-books";
-import { ArrowLeft, Clock, Download, PlayCircle, CheckSquare, FileText, Star } from "lucide-react";
+import { getBookWithContent, getBookBySlug, getNextBookInLevel } from "@/lib/books";
+import { NextBookCTA } from "@/components/CTA/NextBookCTA";
+import { BookViewTracker } from "@/components/book-view-tracker";
+import { ArrowLeft, Clock, Download, PlayCircle, CheckSquare, FileText, Star, Lock } from "lucide-react";
 import SummaryWithCTA from "@/components/SummaryWithCTA";
+import { InsightBox } from "@/components/books/insight-box";
+import { BookFAQ } from "@/components/books/book-faq";
+import { BookQuiz } from "@/components/books/book-quiz";
 
 interface BookPageProps {
   params: {
@@ -19,52 +23,13 @@ interface BookPageProps {
   };
 }
 
-const CANONICAL_SLUG = "le-22-leggi-del-marketing";
-const LEGACY_SLUG = "22-immutable-laws-of-marketing";
 const buildUnlockHref = (slug: string) => `/unlock?next=${encodeURIComponent(`/libri/${slug}`)}`;
-
-function loadMdx(slug: string) {
-  const candidates = [
-    path.join(process.cwd(), "content", "books", `${slug}.mdx`),
-    path.join(process.cwd(), "content", "books", `${CANONICAL_SLUG}.mdx`),
-    path.join(process.cwd(), "content", "books", `${LEGACY_SLUG}.mdx`),
-  ];
-  for (const mdxPath of candidates) {
-    if (fs.existsSync(mdxPath)) {
-      const raw = fs.readFileSync(mdxPath, "utf8");
-      const parsed = matter(raw);
-      return { frontmatter: parsed.data as Record<string, any>, content: parsed.content };
-    }
-  }
-  return null;
-}
-
-function resolveCover(slug: string, frontCover?: string, fallback?: string) {
-  const candidates = [
-    frontCover ? path.join("public", "covers", frontCover) : null,
-    path.join("public", "covers", `${slug}.jpg`),
-    path.join("public", "covers", `${slug}.png`),
-    path.join("public", "covers", `${CANONICAL_SLUG}.jpg`),
-    path.join("public", "covers", `${CANONICAL_SLUG}.png`),
-    path.join("public", "covers", `${LEGACY_SLUG}.jpg`),
-    path.join("public", "covers", `${LEGACY_SLUG}.png`),
-  ].filter(Boolean) as string[];
-  for (const filePath of candidates) {
-    if (fs.existsSync(path.join(process.cwd(), filePath))) {
-      return `/${path.relative("public", filePath)}`;
-    }
-  }
-  return fallback || null;
-}
 
 function resolveAudio(slug: string) {
   const candidates = [
     path.join("public", "audio", `${slug}.mp3`),
     path.join("public", "audio", `${slug}.m4a`),
     path.join("public", "audio", `${slug}.wav`),
-    path.join("public", "audio", `${CANONICAL_SLUG}.mp3`),
-    path.join("public", "audio", `${CANONICAL_SLUG}.m4a`),
-    path.join("public", "audio", `${LEGACY_SLUG}.mp3`),
   ];
   for (const filePath of candidates) {
     if (fs.existsSync(path.join(process.cwd(), filePath))) {
@@ -74,37 +39,49 @@ function resolveAudio(slug: string) {
   return null;
 }
 
-export default function BookPage({ params }: BookPageProps) {
-  const slug = params.slug;
-  if (slug === LEGACY_SLUG) {
-    redirect(`/libri/${CANONICAL_SLUG}`);
+function resolvePdf(slug: string) {
+  const candidates = [
+    path.join("public", "downloads", `${slug}.pdf`),
+  ];
+  for (const filePath of candidates) {
+    if (fs.existsSync(path.join(process.cwd(), filePath))) {
+      return `/${path.relative("public", filePath)}`;
+    }
   }
-  const mdx = loadMdx(slug);
-  const book = books.find((b) => b.slug === slug || b.slug === CANONICAL_SLUG || b.slug === LEGACY_SLUG);
-  if (!mdx && !book) {
+  return null;
+}
+
+export default async function BookPage({ params }: BookPageProps) {
+  const slug = params.slug;
+
+  // Get book with full content
+  const bookWithContent = getBookWithContent(slug);
+
+  if (!bookWithContent) {
     notFound();
   }
-  const cookieStore = cookies();
+
+  const cookieStore = await cookies();
   const hasFree = !!cookieStore.get("pv_free");
   const hasPro = !!cookieStore.get("pv_pro");
+  const hasAccess = hasFree || hasPro;
 
-  const front = mdx?.frontmatter ?? {};
-  const overrideTitle =
-    slug === CANONICAL_SLUG || slug === LEGACY_SLUG
-      ? "Le 22 Immutabili Leggi del Marketing"
-      : undefined;
-  const title = overrideTitle || front.title || book?.title || slug;
-  const author = front.author || book?.author || "";
-  const level = (front.pvCategory || book?.level || "base").toLowerCase();
-  const description = front.excerpt || front.metaDescription || book?.description || "";
-  const coverImage = resolveCover(slug, front.coverImage, book?.coverImage || undefined);
-  const rating = book?.rating ?? front.rating ?? 4.8;
-  const readingTimeFull = book?.readingTimeFull ?? "";
-  const readingTimeSystem = book?.readingTimeSystem ?? "";
+  const { content, frontmatter, ...book } = bookWithContent;
+  const title = book.title;
+  const author = book.author;
+  const level = book.level;
+  const description = book.description;
+  const coverImage = book.coverImage;
+  const rating = book.rating;
+  const readingTimeFull = book.readingTimeFull;
+  const readingTimeSystem = book.readingTimeSystem;
   const audioSrc = resolveAudio(slug);
+  const pdfSrc = resolvePdf(slug);
+  const nextBook = getNextBookInLevel(slug);
 
   return (
     <div className="flex flex-col min-h-screen">
+      <BookViewTracker bookSlug={slug} />
       <Header />
       <main className="flex-grow">
         <div className="bg-muted/30 py-12 border-b">
@@ -167,10 +144,19 @@ export default function BookPage({ params }: BookPageProps) {
 
                 <div className="flex flex-col gap-3 pt-2">
                   <div className="flex flex-wrap gap-4">
-                    {hasFree || hasPro ? (
-                      <Button size="sm" className="gap-2">
-                        <Download className="h-4 w-4" />
-                        Scarica Riassunto PDF
+                    {hasAccess ? (
+                      <Button size="sm" className="gap-2" asChild>
+                        {pdfSrc ? (
+                          <a href={pdfSrc} download>
+                            <Download className="h-4 w-4" />
+                            Scarica Riassunto PDF
+                          </a>
+                        ) : (
+                          <span className="opacity-50 cursor-not-allowed">
+                            <Download className="h-4 w-4" />
+                            PDF non disponibile
+                          </span>
+                        )}
                       </Button>
                     ) : (
                       <Button
@@ -193,27 +179,38 @@ export default function BookPage({ params }: BookPageProps) {
                     </div>
                     <div className="flex items-center gap-4">
                       {audioSrc ? (
-                        hasFree || hasPro ? (
-                          <>
+                        hasAccess ? (
+                          <div className="flex flex-col gap-3">
                             <audio controls preload="none" className="h-10" src={audioSrc}>
                               Il tuo browser non supporta l'audio.
                             </audio>
-                            <Link
-                              href={audioSrc}
-                              className="text-sm text-primary hover:underline inline-flex items-center gap-1"
-                              download
-                            >
-                              <Download className="h-4 w-4" />
-                              Download
-                            </Link>
-                          </>
+                            <div className="flex flex-wrap gap-3">
+                              <Button size="sm" className="gap-2" asChild>
+                                <a href={audioSrc} download>
+                                  <Download className="h-4 w-4" />
+                                  Scarica audio ripasso
+                                </a>
+                              </Button>
+                              <Button size="sm" variant="outline" className="gap-2" asChild>
+                                <a href={audioSrc}>
+                                  <PlayCircle className="h-4 w-4" />
+                                  Ascolta ora
+                                </a>
+                              </Button>
+                            </div>
+                          </div>
                         ) : (
-                          <Link
-                            href={buildUnlockHref(slug)}
-                            className="text-sm text-primary hover:underline inline-flex items-center gap-1"
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="gap-2 opacity-60 hover:opacity-100"
+                            asChild
                           >
-                            Sblocca per ascoltare →
-                          </Link>
+                            <Link href={buildUnlockHref(slug)}>
+                              <Lock className="h-4 w-4" />
+                              Sblocca audio ripasso
+                            </Link>
+                          </Button>
                         )
                       ) : (
                         <p className="text-sm text-muted-foreground">Audio non disponibile.</p>
@@ -235,11 +232,13 @@ export default function BookPage({ params }: BookPageProps) {
                   Riassunto completo
                 </h2>
                 <div className="article-content">
-                  {mdx ? (
-                    <SummaryWithCTA mdxContent={mdx.content} />
-                  ) : (
-                    <p className="text-muted-foreground">Riassunto MDX non trovato per questo libro.</p>
-                  )}
+                  <SummaryWithCTA
+                    mdxContent={content}
+                    bookSlug={slug}
+                    bookTitle={title}
+                    bookAuthor={author}
+                    amazonLink={book.amazonLink}
+                  />
                 </div>
               </section>
 
@@ -292,24 +291,45 @@ export default function BookPage({ params }: BookPageProps) {
                   </div>
                 </div>
               </section>
+
+              {/* Insight Boxes */}
+              {frontmatter.insightBoxes && frontmatter.insightBoxes.length > 0 && (
+                <section>
+                  {frontmatter.insightBoxes.map((insight, index) => (
+                    <InsightBox
+                      key={index}
+                      title={insight.title}
+                      content={insight.content}
+                      articleSlug={insight.articleSlug}
+                      articleTitle={insight.articleTitle}
+                    />
+                  ))}
+                </section>
+              )}
+
+              {/* FAQs */}
+              {frontmatter.faqs && frontmatter.faqs.length > 0 && (
+                <BookFAQ faqs={frontmatter.faqs} />
+              )}
+
+              {/* Quiz */}
+              {frontmatter.quiz && frontmatter.quiz.length > 0 && (
+                <BookQuiz quiz={frontmatter.quiz} bookTitle={title} />
+              )}
             </div>
 
             <div className="space-y-6">
-              <div className="p-6 rounded-xl bg-primary/5 border border-primary/10">
-                <h3 className="font-bold mb-4">Prossimo Libro nel percorso</h3>
-                <div className="space-y-4">
-                  <div className="aspect-[2/3] bg-background rounded border flex items-center justify-center text-xs text-center p-2 text-muted-foreground">
-                    Copertina Positioning
-                  </div>
-                  <div>
-                    <p className="font-bold">Positioning</p>
-                    <p className="text-sm text-muted-foreground">Al Ries &amp; Jack Trout</p>
-                  </div>
-                  <Button className="w-full" size="sm">
-                    Inizia Lunedì
-                  </Button>
-                </div>
-              </div>
+              {nextBook && (
+                <NextBookCTA
+                  nextBook={{
+                    slug: nextBook.slug,
+                    title: nextBook.title,
+                    author: nextBook.author,
+                    coverImage: nextBook.coverImage,
+                    excerpt: nextBook.description,
+                  }}
+                />
+              )}
             </div>
           </div>
         </div>

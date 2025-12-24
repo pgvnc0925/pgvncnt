@@ -23,9 +23,9 @@ export default function RisorseBasePage() {
                 <CardTitle>Audio-ripassi</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 text-sm text-muted-foreground">
-                <p>I file audio sono disponibili nella sezione download.</p>
+                <p>I file audio sono disponibili direttamente nelle pagine dei libri. Sblocca con la tua email per accedere.</p>
                 <Button variant="outline" asChild>
-                  <Link href="/audio">Vai agli audio</Link>
+                  <Link href="/percorsi/base">Vai ai libri</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -35,9 +35,9 @@ export default function RisorseBasePage() {
                 <CardTitle>Mappe e Quiz</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 text-sm text-muted-foreground">
-                <p>Scarica mappe mentali e quiz per ripassare rapidamente i concetti.</p>
-                <Button variant="outline" asChild>
-                  <Link href="/quiz">Vai ai quiz</Link>
+                <p>Mappe mentali e quiz interattivi saranno disponibili a breve per ogni libro del percorso.</p>
+                <Button variant="outline" disabled>
+                  Prossimamente
                 </Button>
               </CardContent>
             </Card>

@@ -1,5 +1,7 @@
+import Image from "next/image"
 import Link from "next/link"
 import Script from "next/script"
+import { Instagram, Facebook, Mail } from "lucide-react"
 
 export function Footer() {
   return (
@@ -114,20 +116,22 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="space-y-3">
-            <h3 className="font-bold text-white text-lg">Pagine <span className="text-secondary">Vincenti</span></h3>
-            <p className="text-sm text-slate-400">
-              Tools seri per imprenditori seri. Niente fuffa, solo framework testati.
-            </p>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 items-start">
+          {/* Col 1: Brand text */}
+          <div className="space-y-2">
+            <h3 className="font-bold text-white text-lg">
+              Pagine <span className="text-secondary">Vincenti</span>
+            </h3>
+            <p className="text-sm text-slate-400">Diventare Marketers con i Classici</p>
           </div>
 
+          {/* Col 2: Le nostre app */}
           <div className="space-y-3">
-            <h4 className="font-semibold text-white">Strumenti</h4>
+            <h4 className="font-semibold text-white">Le Nostre App</h4>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/tools" className="hover:text-secondary transition-colors">
-                  Tutti i tool
+                  Le App
                 </Link>
               </li>
               <li>
@@ -138,27 +142,7 @@ export function Footer() {
             </ul>
           </div>
 
-          <div className="space-y-3">
-            <h4 className="font-semibold text-white">Risorse</h4>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/libri" className="hover:text-secondary transition-colors">
-                  Libri
-                </Link>
-              </li>
-              <li>
-                <Link href="/articoli" className="hover:text-secondary transition-colors">
-                  Articoli
-                </Link>
-              </li>
-              <li>
-                <Link href="/chi-sono" className="hover:text-secondary transition-colors">
-                  Chi sono
-                </Link>
-              </li>
-            </ul>
-          </div>
-
+          {/* Col 3: Legale */}
           <div className="space-y-3">
             <h4 className="font-semibold text-white">Legale</h4>
             <ul className="space-y-2 text-sm">
@@ -173,8 +157,38 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/politica-rimborso" className="hover:text-secondary transition-colors">
+                  Politica di Rimborso
+                </Link>
+              </li>
+              <li>
                 <Link href="/cookie-policy" className="hover:text-secondary transition-colors">
                   Cookie Policy
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Col 4: Contattaci */}
+          <div className="space-y-3">
+            <h4 className="font-semibold text-white">Contattaci</h4>
+            <ul className="space-y-3 text-sm">
+              <li>
+                <Link href="https://www.instagram.com/paginevincenti/" aria-label="Instagram" className="hover:text-secondary transition-colors inline-flex items-center gap-2">
+                  <Instagram className="w-5 h-5" />
+                  Instagram
+                </Link>
+              </li>
+              <li>
+                <Link href="https://www.facebook.com/paginevincenti" aria-label="Facebook" className="hover:text-secondary transition-colors inline-flex items-center gap-2">
+                  <Facebook className="w-5 h-5" />
+                  Facebook
+                </Link>
+              </li>
+              <li>
+                <Link href="mailto:info@paginevincenti.it" aria-label="Email" className="hover:text-secondary transition-colors inline-flex items-center gap-2">
+                  <Mail className="w-5 h-5" />
+                  info@paginevincenti.it
                 </Link>
               </li>
             </ul>

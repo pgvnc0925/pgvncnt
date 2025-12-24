@@ -1,6 +1,8 @@
 import { BookCard } from "@/components/books/book-card";
 import { Button } from "@/components/ui/button";
-import { books, BookLevel } from "@/data/mock-books";
+import { Badge } from "@/components/ui/badge";
+import { getBooksByLevel } from "@/lib/books";
+import { BookLevel } from "@/types/book";
 import { ArrowLeft, CheckCircle2, TrendingUp, Award } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -51,8 +53,8 @@ export default function PercorsoLevelPage({ params }: PercorsoLevelPageProps) {
     const config = levelConfig[level];
     const Icon = config.icon;
 
-    // Filter books for this level
-    const levelBooks = books.filter((book) => book.level === level);
+    // Get books for this level from filesystem
+    const levelBooks = getBooksByLevel(level as BookLevel);
     const firstBook = levelBooks[0];
     const cookieStore = cookies();
     const hasPvFree = !!cookieStore.get("pv_free");
@@ -102,7 +104,12 @@ export default function PercorsoLevelPage({ params }: PercorsoLevelPageProps) {
                                 <Icon className="h-10 w-10" />
                             </div>
                             <div>
-                                <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">Percorso <span className="text-secondary">{config.title}</span></h1>
+                                <div className="flex items-center gap-3 mb-4">
+                                    <h1 className="text-4xl md:text-5xl font-bold text-white">Percorso <span className="text-secondary">{config.title}</span></h1>
+                                    {(level === 'intermedio' || level === 'avanzato') && (
+                                        <Badge className="bg-secondary text-primary">Prossimamente</Badge>
+                                    )}
+                                </div>
                                 <p className="text-xl text-slate-300 max-w-2xl leading-relaxed">
                                     {config.description}
                                 </p>
@@ -162,8 +169,18 @@ export default function PercorsoLevelPage({ params }: PercorsoLevelPageProps) {
                                 <BookCard key={book.id} book={book} />
                             ))
                         ) : (
-                            <div className="col-span-full text-center py-12 text-muted-foreground">
-                                Nessun libro trovato per questo livello al momento.
+                            <div className="col-span-full text-center py-12">
+                                <Badge className="bg-secondary text-primary mb-4">Prossimamente</Badge>
+                                <p className="text-muted-foreground mb-4">
+                                    {level === 'intermedio'
+                                        ? 'I libri del percorso Intermedio saranno disponibili dopo il completamento del percorso Base.'
+                                        : 'I libri del percorso Avanzato saranno disponibili dopo il completamento dei percorsi Base e Intermedio.'}
+                                </p>
+                                <Button asChild variant="outline">
+                                    <Link href="/percorsi/base">
+                                        Inizia dal Percorso Base →
+                                    </Link>
+                                </Button>
                             </div>
                         )}
                     </div>

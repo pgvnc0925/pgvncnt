@@ -69,7 +69,7 @@ export default function ArticoliPage() {
                       </div>
                     </div>
                     <CardTitle className="text-xl group-hover:text-primary transition-colors">
-                      <Link href={`/blog/${article.slug}`}>
+                      <Link href={`/approfondimenti/${article.slug}`}>
                         {article.frontmatter.title}
                       </Link>
                     </CardTitle>
@@ -96,7 +96,7 @@ export default function ArticoliPage() {
 
                   <CardFooter>
                     <Button variant="ghost" asChild className="w-full group-hover:bg-secondary group-hover:text-primary transition-all">
-                      <Link href={`/blog/${article.slug}`}>
+                      <Link href={`/approfondimenti/${article.slug}`}>
                         Leggi articolo →
                       </Link>
                     </Button>

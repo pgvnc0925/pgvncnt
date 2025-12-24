@@ -7,7 +7,7 @@ import { Footer } from "@/components/layout/footer"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { getArticleBySlug, getAllArticleSlugs } from "@/lib/articles"
-import { Calendar, Tag, ArrowRight, BookOpen } from "lucide-react"
+import { Calendar, Tag, ArrowRight, BookOpen, Link as LinkIcon } from "lucide-react"
 import remarkGfm from "remark-gfm"
 import rehypeHighlight from "rehype-highlight"
 
@@ -105,6 +105,46 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
             </div>
           )}
 
+          {/* FAQ Top */}
+          {frontmatter.faq && frontmatter.faq.length > 0 && (
+            <section className="mb-12 space-y-4">
+              <h2 className="text-2xl font-bold">FAQ</h2>
+              <div className="space-y-3">
+                {frontmatter.faq.map((item, index) => (
+                  <Card key={index} className="p-4">
+                    <h3 className="text-lg font-semibold mb-2">{item.question}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{item.answer}</p>
+                  </Card>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* CTA Amazon affiliato */}
+          {frontmatter.amazonAffiliateLink && (
+            <Card className="mb-12 p-6 bg-amber-50 border border-amber-200">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div className="space-y-2">
+                  <p className="text-sm uppercase tracking-wide text-amber-700 font-semibold flex items-center gap-2">
+                    <LinkIcon className="w-4 h-4" />
+                    Link affiliato
+                  </p>
+                  <h3 className="text-xl font-bold text-amber-900">
+                    Approfondisci acquistando il libro su Amazon
+                  </h3>
+                  <p className="text-amber-800 text-sm">
+                    Il tuo supporto tramite questo link ci aiuta a creare nuovi contenuti.
+                  </p>
+                </div>
+                <Button asChild size="lg" className="bg-amber-600 hover:bg-amber-700 text-white">
+                  <Link href={frontmatter.amazonAffiliateLink} target="_blank">
+                    Vai su Amazon <ArrowRight className="ml-2 w-5 h-5" />
+                  </Link>
+                </Button>
+              </div>
+            </Card>
+          )}
+
           {/* Content */}
           <div className="article-content mb-16">
             <MDXRemote
@@ -117,6 +157,31 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
               }}
             />
           </div>
+
+          {/* CTA verso libro */}
+          {frontmatter.ctaBookSlug && (
+            <Card className="my-12 p-8 bg-gradient-to-br from-secondary/10 via-primary/5 to-primary/10 border-secondary/20">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div className="space-y-2">
+                  <p className="text-sm uppercase tracking-wide text-secondary font-semibold flex items-center gap-2">
+                    <LinkIcon className="w-4 h-4" />
+                    Libro correlato
+                  </p>
+                  <h3 className="text-2xl font-bold">
+                    {frontmatter.ctaBookText || "Vuoi approfondire questi concetti? Dai un'occhiata alla nostra analisi del libro →"}
+                  </h3>
+                  <p className="text-muted-foreground">
+                    Approfondisci il tema leggendo il riassunto completo del libro.
+                  </p>
+                </div>
+                <Button size="lg" variant="secondary" asChild>
+                  <Link href={`/libri/${frontmatter.ctaBookSlug}`}>
+                    Vai al libro <ArrowRight className="ml-2 w-5 h-5" />
+                  </Link>
+                </Button>
+              </div>
+            </Card>
+          )}
 
           {/* Auto CTA - Middle of article */}
           <Card className="my-16 p-8 bg-gradient-to-br from-primary/5 to-secondary/5 border-primary/20">

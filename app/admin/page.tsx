@@ -6,234 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
-import fs from "fs/promises";
-import path from "path";
-import matter from "gray-matter";
-import { supabaseAdmin } from "@/lib/supabase/admin";
+import Link from "next/link";
+import { BookOpen, ArrowRight, Settings, FileText, Users, Plus } from "lucide-react";
+import { getBookStats } from "@/lib/books";
 
 const ADMIN_COOKIE = "pv_admin_session";
-const STORAGE_BUCKETS = {
-  mdx: "pv-mdx",
-  rag: "pv-rag",
-  covers: "pv-covers",
-  audio: "pv-audio",
-  maps: "pv-maps",
-  quiz: "pv-quiz",
-} as const;
-
-function sanitizeFilename(name: string) {
-  const base = path.basename(name);
-  return base.replace(/[^a-zA-Z0-9._-]/g, "_");
-}
-
-async function ensureDir(dir: string) {
-  await fs.mkdir(dir, { recursive: true });
-}
-
-async function saveUpload(params: {
-  file: File | null;
-  allowedExt: string[];
-  destinationDir: string;
-}) {
-  const { file, allowedExt, destinationDir } = params;
-  if (!file) {
-    throw new Error("Nessun file selezionato");
-  }
-
-  const filename = sanitizeFilename(file.name);
-  const ext = path.extname(filename).toLowerCase();
-  if (!allowedExt.includes(ext)) {
-    throw new Error(`Estensione non permessa. Consentite: ${allowedExt.join(", ")}`);
-  }
-
-  const buffer = Buffer.from(await file.arrayBuffer());
-  await ensureDir(destinationDir);
-  const targetPath = path.join(destinationDir, filename);
-  await fs.writeFile(targetPath, buffer);
-  return { filename, buffer, targetPath };
-}
-
-async function ensureBucket(name: string, isPublic = true) {
-  if (!supabaseAdmin) return;
-  const { data, error } = await supabaseAdmin.storage.getBucket(name);
-  if (data || (error && error.message?.includes("not found") === false)) {
-    return;
-  }
-  await supabaseAdmin.storage.createBucket(name, { public: isPublic }).catch(() => undefined);
-}
-
-async function uploadToStorage(params: {
-  bucket: string;
-  filePath: string;
-  buffer: Buffer;
-  contentType?: string;
-}) {
-  if (!supabaseAdmin) throw new Error("Supabase admin non configurato");
-  const { bucket, filePath, buffer, contentType } = params;
-  await ensureBucket(bucket);
-  const { error } = await supabaseAdmin.storage
-    .from(bucket)
-    .upload(filePath, buffer, { upsert: true, contentType });
-  if (error) {
-    throw error;
-  }
-}
-
-async function uploadBookMdx(formData: FormData) {
-  "use server";
-  const file = formData.get("file") as File | null;
-  const { filename, buffer } = await saveUpload({
-    file,
-    allowedExt: [".mdx"],
-    destinationDir: path.join(process.cwd(), "content", "books"),
-  });
-
-  try {
-    const parsed = matter(buffer.toString("utf8"));
-    const fm = parsed.data as Record<string, string>;
-    if (supabaseAdmin) {
-      await supabaseAdmin
-        .from("books")
-        .upsert({
-          slug: fm.slug,
-          title: fm.title,
-          author: fm.author,
-          description: fm.metaDescription || fm.excerpt,
-          amazon_link: fm.amazon_link || null,
-          key_frameworks: fm.tags ? (Array.isArray(fm.tags) ? fm.tags : [fm.tags]) : null,
-        })
-        .throwOnError();
-    }
-  } catch (err) {
-    console.error("Errore parsing/insert MDX:", err);
-  }
-
-  try {
-    await uploadToStorage({
-      bucket: STORAGE_BUCKETS.mdx,
-      filePath: `books/${filename}`,
-      buffer,
-      contentType: "text/markdown",
-    });
-  } catch (err) {
-    console.error("Upload MDX storage error:", err);
-    redirect("/admin?upload_error=mdx");
-  }
-
-  revalidatePath("/percorsi");
-  redirect("/admin?uploaded=mdx");
-}
-
-async function uploadRagJson(formData: FormData) {
-  "use server";
-  const file = formData.get("file") as File | null;
-  const { filename, buffer } = await saveUpload({
-    file,
-    allowedExt: [".json"],
-    destinationDir: path.join(process.cwd(), "public", "rag-json"),
-  });
-  try {
-    await uploadToStorage({
-      bucket: STORAGE_BUCKETS.rag,
-      filePath: `rag/${filename}`,
-      buffer,
-      contentType: "application/json",
-    });
-  } catch (err) {
-    console.error("Upload RAG storage error:", err);
-    redirect("/admin?upload_error=rag");
-  }
-  redirect("/admin?uploaded=rag");
-}
-
-async function uploadCover(formData: FormData) {
-  "use server";
-  const file = formData.get("file") as File | null;
-  const { filename, buffer } = await saveUpload({
-    file,
-    allowedExt: [".png", ".jpg", ".jpeg"],
-    destinationDir: path.join(process.cwd(), "public", "covers"),
-  });
-  try {
-    await uploadToStorage({
-      bucket: STORAGE_BUCKETS.covers,
-      filePath: `covers/${filename}`,
-      buffer,
-      contentType: "image/png",
-    });
-  } catch (err) {
-    console.error("Upload cover storage error:", err);
-    redirect("/admin?upload_error=covers");
-  }
-  redirect("/admin?uploaded=cover");
-}
-
-async function uploadAudio(formData: FormData) {
-  "use server";
-  const file = formData.get("file") as File | null;
-  const { filename, buffer } = await saveUpload({
-    file,
-    allowedExt: [".mp3", ".wav", ".m4a"],
-    destinationDir: path.join(process.cwd(), "public", "audio"),
-  });
-  try {
-    await uploadToStorage({
-      bucket: STORAGE_BUCKETS.audio,
-      filePath: `audio/${filename}`,
-      buffer,
-      contentType: "audio/mpeg",
-    });
-  } catch (err) {
-    console.error("Upload audio storage error:", err);
-    redirect("/admin?upload_error=audio");
-  }
-  redirect("/admin?uploaded=audio");
-}
-
-async function uploadMap(formData: FormData) {
-  "use server";
-  const file = formData.get("file") as File | null;
-  const { filename, buffer } = await saveUpload({
-    file,
-    allowedExt: [".png", ".jpg", ".jpeg", ".pdf"],
-    destinationDir: path.join(process.cwd(), "public", "maps"),
-  });
-  try {
-    await uploadToStorage({
-      bucket: STORAGE_BUCKETS.maps,
-      filePath: `maps/${filename}`,
-      buffer,
-      contentType: "application/octet-stream",
-    });
-  } catch (err) {
-    console.error("Upload map storage error:", err);
-    redirect("/admin?upload_error=maps");
-  }
-  redirect("/admin?uploaded=maps");
-}
-
-async function uploadQuiz(formData: FormData) {
-  "use server";
-  const file = formData.get("file") as File | null;
-  const { filename, buffer } = await saveUpload({
-    file,
-    allowedExt: [".json", ".csv", ".txt"],
-    destinationDir: path.join(process.cwd(), "public", "quiz"),
-  });
-  try {
-    await uploadToStorage({
-      bucket: STORAGE_BUCKETS.quiz,
-      filePath: `quiz/${filename}`,
-      buffer,
-      contentType: "application/json",
-    });
-  } catch (err) {
-    console.error("Upload quiz storage error:", err);
-    redirect("/admin?upload_error=quiz");
-  }
-  redirect("/admin?uploaded=quiz");
-}
 
 async function authenticateAdmin(formData: FormData) {
   "use server";
@@ -263,27 +40,24 @@ export default async function AdminPage({
   const currentToken = cookieStore.get(ADMIN_COOKIE)?.value;
   const hasAccess = !!adminSecret && currentToken === adminSecret;
   const showError = searchParams?.error === "1";
-  const uploaded = (searchParams?.uploaded as string | undefined) ?? "";
-  const uploadError = (searchParams?.upload_error as string | undefined) ?? "";
+
+  // Get book stats if authenticated
+  let stats = { total: 0, byLevel: { base: 0, intermedio: 0, avanzato: 0 } };
+  if (hasAccess) {
+    stats = getBookStats();
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
 
       <main className="flex-grow container mx-auto px-4 md:px-6 py-12">
-        <div className="max-w-4xl mx-auto mb-10 text-center space-y-3">
+        <div className="max-w-5xl mx-auto mb-10 text-center space-y-3">
           <Badge className="bg-secondary text-primary">Admin Only</Badge>
-          <h1 className="text-3xl md:text-4xl font-bold text-primary">PV Upload Dashboard</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-primary">Dashboard Amministratore</h1>
           <p className="text-muted-foreground">
-            Carica i file richiesti (MDX, JSON, copertine). I file vengono salvati nelle cartelle previste
-            dal README e saranno disponibili per la pipeline automatica.
+            Centro di controllo per la gestione del sito Pagine Vincenti
           </p>
-          {uploaded && (
-            <p className="text-green-600 text-sm">Upload completato: {uploaded}</p>
-          )}
-          {uploadError && (
-            <p className="text-red-600 text-sm">Errore upload: {uploadError}. Verifica Supabase env/permessi.</p>
-          )}
         </div>
 
         {!hasAccess ? (
@@ -312,96 +86,190 @@ export default async function AdminPage({
             </Card>
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-3">
-            <Card>
+          <div className="space-y-8">
+            {/* Statistics Overview */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardDescription>Totale Libri</CardDescription>
+                  <CardTitle className="text-3xl">{stats.total}</CardTitle>
+                </CardHeader>
+              </Card>
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardDescription>Livello Base</CardDescription>
+                  <CardTitle className="text-3xl text-slate-600">{stats.byLevel.base}</CardTitle>
+                </CardHeader>
+              </Card>
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardDescription>Livello Intermedio</CardDescription>
+                  <CardTitle className="text-3xl text-amber-600">{stats.byLevel.intermedio}</CardTitle>
+                </CardHeader>
+              </Card>
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardDescription>Livello Avanzato</CardDescription>
+                  <CardTitle className="text-3xl text-primary">{stats.byLevel.avanzato}</CardTitle>
+                </CardHeader>
+              </Card>
+            </div>
+
+            {/* Quick Actions */}
+            <div>
+              <h2 className="text-2xl font-bold mb-6">Azioni Rapide</h2>
+              <div className="grid md:grid-cols-3 gap-6">
+
+                {/* Gestione Libri */}
+                <Card className="hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <div className="flex items-center gap-3">
+                      <div className="h-12 w-12 rounded-xl bg-muted flex items-center justify-center">
+                        <BookOpen className="h-6 w-6 text-primary" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl">Libri</CardTitle>
+                        <CardDescription className="mt-1">
+                          Elenco libri e nuovo inserimento
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <p className="text-sm text-muted-foreground">
+                      Consulta i libri già caricati oppure aggiungine di nuovi con l'import MDX.
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button asChild variant="outline" size="sm">
+                        <Link href="/admin/books">
+                          <BookOpen className="mr-2 h-4 w-4" />
+                          Elenco
+                        </Link>
+                      </Button>
+                      <Button asChild size="sm">
+                        <Link href="/admin/books/new">
+                          <Plus className="mr-2 h-4 w-4" />
+                          Nuovo
+                        </Link>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Site Preview */}
+                <Card className="hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <div className="flex items-center gap-3">
+                      <div className="h-12 w-12 rounded-xl bg-muted flex items-center justify-center">
+                        <FileText className="h-6 w-6 text-muted-foreground" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl">Anteprima Sito</CardTitle>
+                        <CardDescription className="mt-1">
+                          Visualizza il sito pubblico
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <p className="text-sm text-muted-foreground">
+                      Visualizza il sito come lo vedono gli utenti. Controlla l'aspetto dei libri e delle pagine.
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button asChild variant="outline" size="sm">
+                        <Link href="/" target="_blank">
+                          Homepage
+                        </Link>
+                      </Button>
+                      <Button asChild variant="outline" size="sm">
+                        <Link href="/percorsi/base" target="_blank">
+                          Percorsi
+                        </Link>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Articoli */}
+                <Card className="hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <div className="flex items-center gap-3">
+                      <div className="h-12 w-12 rounded-xl bg-muted flex items-center justify-center">
+                        <Users className="h-6 w-6 text-primary" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl">Articoli</CardTitle>
+                        <CardDescription className="mt-1">
+                          Approfondimenti e contenuti editoriali
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <p className="text-sm text-muted-foreground">
+                      Visualizza gli approfondimenti già pubblicati o aggiungine di nuovi.
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button variant="outline" size="sm" asChild>
+                        <Link href="/admin/articles">
+                          Elenco
+                        </Link>
+                      </Button>
+                      <Button size="sm" asChild>
+                        <Link href="/admin/articles/new">
+                          Nuovo
+                        </Link>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
+              </div>
+            </div>
+
+            {/* Info Section */}
+            <Card className="bg-muted/50">
               <CardHeader>
-                <CardTitle>Riassunti Libri (.mdx)</CardTitle>
-                <CardDescription>Salvati in /content/books e upsert su Supabase.books</CardDescription>
+                <CardTitle className="flex items-center gap-2">
+                  <Settings className="h-5 w-5" />
+                  Informazioni Sistema
+                </CardTitle>
               </CardHeader>
-              <CardContent>
-                <form action={uploadBookMdx} className="space-y-3">
-                  <Input type="file" name="file" accept=".mdx" required />
-                  <Button type="submit" className="w-full">
-                    Carica MDX
-                  </Button>
-                </form>
+              <CardContent className="space-y-3">
+                <div className="grid md:grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <p className="font-medium text-muted-foreground">Environment</p>
+                    <p className="font-mono">{process.env.NODE_ENV}</p>
+                  </div>
+                  <div>
+                    <p className="font-medium text-muted-foreground">Supabase</p>
+                    <p className="font-mono">{process.env.NEXT_PUBLIC_SUPABASE_URL ? '✅ Configurato' : '❌ Non configurato'}</p>
+                  </div>
+                  <div>
+                    <p className="font-medium text-muted-foreground">Libri nel Sistema</p>
+                    <p className="font-semibold">{stats.total} libri</p>
+                  </div>
+                  <div>
+                    <p className="font-medium text-muted-foreground">Admin Auth</p>
+                    <p className="text-green-600 font-semibold">✓ Autenticato</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
-            <Card>
+            {/* Info Section */}
+            <Card className="border-blue-200 bg-blue-50/50">
               <CardHeader>
-                <CardTitle>RAG JSON</CardTitle>
-                <CardDescription>Salvati in /public/rag-json</CardDescription>
+                <CardTitle className="text-blue-900">📚 Dashboard Admin</CardTitle>
               </CardHeader>
-              <CardContent>
-                <form action={uploadRagJson} className="space-y-3">
-                  <Input type="file" name="file" accept=".json" required />
-                  <Button type="submit" className="w-full">
-                    Carica JSON
-                  </Button>
-                </form>
+              <CardContent className="text-sm text-blue-900 space-y-2">
+                <p>Dashboard amministratore di Pagine Vincenti.</p>
+                <p className="text-muted-foreground">
+                  Gestisci contenuti, visualizza statistiche e controlla il sito.
+                </p>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Copertine Libri (.png/.jpg)</CardTitle>
-                <CardDescription>Salvate in /public/covers</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form action={uploadCover} className="space-y-3">
-                  <Input type="file" name="file" accept=".png,.jpg,.jpeg" required />
-                  <Button type="submit" className="w-full">
-                    Carica Copertina
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Audio (.mp3/.wav)</CardTitle>
-                <CardDescription>Salvati in /public/audio</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form action={uploadAudio} className="space-y-3">
-                  <Input type="file" name="file" accept=".mp3,.wav,.m4a" required />
-                  <Button type="submit" className="w-full">
-                    Carica Audio
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Mappe (.png/.jpg/.pdf)</CardTitle>
-                <CardDescription>Salvate in /public/maps</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form action={uploadMap} className="space-y-3">
-                  <Input type="file" name="file" accept=".png,.jpg,.jpeg,.pdf" required />
-                  <Button type="submit" className="w-full">
-                    Carica Mappa
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Quiz/Template (.json/.csv/.txt)</CardTitle>
-                <CardDescription>Salvati in /public/quiz</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form action={uploadQuiz} className="space-y-3">
-                  <Input type="file" name="file" accept=".json,.csv,.txt" required />
-                  <Button type="submit" className="w-full">
-                    Carica Quiz/Template
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
           </div>
         )}
       </main>

@@ -105,12 +105,51 @@
 
 @layer base {
   * { @apply border-border; }
-  body { @apply bg-background text-foreground; }
+  body {
+    @apply bg-background text-foreground;
+    background-image:
+      radial-gradient(circle at 8% 20%, rgba(212, 175, 55, 0.16), transparent 30%),
+      radial-gradient(circle at 82% 12%, rgba(59, 130, 246, 0.14), transparent 26%),
+      radial-gradient(circle at 50% 85%, rgba(15, 23, 42, 0.18), transparent 30%);
+    background-attachment: fixed;
+  }
   strong, b { color: hsl(var(--primary)); }
 }
 
 /* Article Content Styling */
 @layer components {
+  .glass-surface {
+    background: hsla(var(--card), 0.65);
+    border: 1px solid hsla(var(--border), 0.7);
+    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .glass-surface-strong {
+    background: hsla(var(--card), 0.8);
+    border: 1px solid hsla(var(--border), 0.8);
+    box-shadow: 0 25px 80px rgba(15, 23, 42, 0.16);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .glass-surface-dark {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  @supports not ((backdrop-filter: blur(1px))) {
+    .glass-surface,
+    .glass-surface-strong,
+    .glass-surface-dark {
+      background: hsla(var(--card), 0.95);
+    }
+  }
+
   .article-content {
     @apply text-foreground leading-relaxed;
   }
