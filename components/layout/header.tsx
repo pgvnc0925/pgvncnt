@@ -21,10 +21,16 @@ export function Header() {
 
         <nav className="hidden md:flex items-center space-x-8">
           <Link
-            href="/percorsi"
+            href="/corsi"
             className="text-base font-semibold text-primary hover:text-secondary transition-colors"
           >
-            Percorsi
+            Corsi
+          </Link>
+          <Link
+            href="/valutazione"
+            className="text-base font-semibold text-primary hover:text-secondary transition-colors"
+          >
+            Valutazione
           </Link>
           <Link
             href="/risorse"

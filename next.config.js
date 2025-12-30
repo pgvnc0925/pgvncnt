@@ -8,6 +8,14 @@ const nextConfig = {
       },
     ],
   },
+  // Exclude template folders from compilation
+  webpack: (config) => {
+    config.watchOptions = {
+      ...config.watchOptions,
+      ignored: ['**/files+sito/**', '**/pv-app-template/**', '**/evaluation form/**'],
+    };
+    return config;
+  },
 }
 
 module.exports = nextConfig

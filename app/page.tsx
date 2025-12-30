@@ -12,57 +12,34 @@ export default async function Home() {
   // Get top 3 books for "Classifica Utilità"
   const books = getAllBooks();
   const topBooks = [...books].sort((a, b) => b.rating - a.rating).slice(0, 3);
-  const levels = [
+  const courses = [
     {
-      key: "base",
-      title: "Base",
-      subtitle: "",
-      icon: CheckCircle2,
-      intro:
-        "Qui costruisci il modo corretto di pensare. Niente tattiche, niente hype: solo ciò che un professionista deve sapere per non navigare a caso.",
-      signals: [
-        "Non hai chiara la differenza tra bisogni, desideri, tensioni e valore percepito.",
-        "Non sai rispondere con certezza alle tre domande fondamentali del marketing: cosa vende davvero l'azienda, a quali bisogni risponde, come li soddisfa meglio degli altri.",
-        "Non hai familiarità profonda con posizionamento, USP, marketing mix, piramide di Maslow, segmentazione reale.",
-        "Usi la pratica senza un modello mentale che la guidi.",
-      ],
-      build:
-        "Strategia, differenziazione, senso del mercato e regole che governano ogni decisione. È il punto di partenza di chi vuole smettere di improvvisare.",
-    },
-    {
-      key: "intermedio",
-      title: "Intermedio",
-      subtitle: "",
+      key: "marketing",
+      title: "Marketing & Customer Behavior",
       icon: TrendingUp,
       intro:
-        "Qui impari a leggere la mente del cliente, interpretarne le motivazioni e far rispondere il mercato ai tuoi messaggi.",
+        "Strategia, posizionamento, psicologia del cliente e sistemi di acquisizione/conversione che funzionano nel mondo reale.",
       signals: [
-        "Vuoi scoprire perché le persone comprano davvero, non perché dicono di comprare.",
-        "Vuoi capire i bias cognitivi che alterano ogni decisione (e come usarli in modo etico).",
-        "Vuoi creare messaggi che toccano i tasti giusti e collegarli alla tua nicchia reale.",
-        "Vuoi capire cosa succede nella testa del cliente quando vede un annuncio, un prezzo, un'offerta.",
+        "Vuoi capire perché i clienti comprano davvero e come parlare al loro contesto.",
+        "Ti serve un sistema ripetibile di acquisizione e messaggistica.",
+        "Vuoi smettere di testare tattiche a caso e avere fondamenta solide.",
       ],
       build:
-        "Lettura profonda del consumatore, mappe motivazionali, segmentazione psicografica e situazionale, copy che parla al sistema 1 e 2, offerte costruite per generare risposta.",
-      note:
-        "È il livello che porta sopra l'80% dei professionisti operativi, perché qui nasce la capacità di influenzare.",
+        "Impostare funnel e messaggi che convertono, leggere il cliente e misurare l'impatto con metodo.",
     },
     {
-      key: "avanzato",
-      title: "Avanzato",
-      subtitle: "",
+      key: "imprenditorialita",
+      title: "Imprenditorialità & Sistemi",
       icon: Award,
       intro:
-        "Qui arrivi al punto in cui il marketing diventa un sistema, non un insieme di tecniche.",
+        "Processi, delega, governance e metriche per far funzionare il business senza dipendere dalla tua presenza costante.",
       signals: [
-        "Vuoi pensare come i top marketer e decidere con lucidità.",
-        "Vuoi delegare con criterio e creare processi ripetibili.",
-        "Vuoi integrare strategia, copywriting, storytelling, selling, branding.",
-        "Vuoi costruire un punto di vista elevato sul mercato.",
+        "Il team non esegue in modo coerente o fai tutto tu.",
+        "Mancano processi standardizzati e metriche per migliorare.",
+        "Vuoi scalare con qualità, riducendo errori e revisioni infinite.",
       ],
       build:
-        "Leggere un mercato come un analista, progettare sistemi di marketing interi, integrare psicologia, strategia, narrazione, economics e costruire un vantaggio competitivo mentale difficile da eguagliare.",
-      note: "È il livello che porta nel top 2,5% del settore. Non è più apprendimento: è trasformazione.",
+        "Documentare SOP, costruire QA, allineare il team e decidere con numeri per crescere con meno attrito.",
     },
   ];
 
@@ -88,8 +65,14 @@ export default async function Home() {
 
           <div className="flex flex-col sm:flex-row justify-center gap-4 pt-8">
             <Button size="lg" className="text-lg px-8 h-14 rounded-full bg-secondary text-primary hover:bg-secondary/90 font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)] transition-all hover:scale-105" asChild>
-              <Link href="/percorsi/base">
-                Inizia il Percorso
+              <Link href="/valutazione">
+                Fai la Valutazione
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+            <Button size="lg" className="text-lg px-8 h-14 rounded-full bg-white text-primary hover:bg-slate-100 border border-secondary/40 shadow-[0_0_20px_rgba(15,23,42,0.15)]" asChild>
+              <Link href="/corsi">
+                Scopri i Corsi
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
@@ -105,6 +88,46 @@ export default async function Home() {
               Pagine Vincenti è lo studio guidato dei libri che formano davvero un marketer: riassunti chiari, mappe mentali, checklist operative, audio da ripassare e strumenti applicativi per trasformare ogni concetto in decisioni, strategie e deleghe più intelligenti. Niente fuffa, niente hype, nessun metodino: solo fondamenta che reggono nel tempo.
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* Evaluation CTA */}
+      <section className="relative -mt-10 px-4 md:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto">
+          <Card className="glass-surface-strong border-2 border-white/70 shadow-[0_20px_60px_rgba(15,23,42,0.15)]">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-3">
+                <Wrench className="h-6 w-6 text-secondary" />
+                <CardTitle className="text-2xl">Prima di iniziare, trova i tuoi 3 libri chiave</CardTitle>
+              </div>
+              <p className="text-muted-foreground">
+                Compila 13 domande in 2 minuti: è gratis, nessuna email o carta richiesta, i dati sono salvati in
+                forma anonima solo per migliorare Pagine Vincenti. Evita di leggere a caso: parti dai titoli che
+                risolvono davvero il tuo blocco.
+              </p>
+            </CardHeader>
+            <CardContent className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="flex flex-col gap-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-secondary" />
+                  <span>13 domande, nessun login upfront</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-secondary" />
+                  <span>Consigli di lettura personalizzati</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-secondary" />
+                  <span>Privacy rispettata: salvataggio anonimo</span>
+                </div>
+              </div>
+              <Button size="lg" className="w-full md:w-auto" asChild>
+                <Link href="/valutazione">
+                  Fai la valutazione gratuita <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
@@ -209,45 +232,42 @@ export default async function Home() {
         <RealStatsDashboard />
       </section>
 
-      {/* I 3 Percorsi Section */}
+      {/* I 2 Corsi Section */}
       <section className="relative py-20 px-4 md:px-6 lg:px-8">
         <div className="absolute inset-0 z-[-1] opacity-60 bg-[radial-gradient(circle_at_25%_10%,rgba(212,175,55,0.14),transparent_32%),radial-gradient(circle_at_75%_90%,rgba(59,130,246,0.16),transparent_30%)]" />
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 space-y-4 glass-surface border border-white/40 rounded-3xl px-6 py-8 shadow-[0_18px_60px_rgba(15,23,42,0.14)]">
-            <p className="uppercase tracking-[0.3em] text-sm text-secondary font-semibold">I Percorsi di Pagine Vincenti</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-primary">Tre livelli, un'unica direzione: costruire una mente di marketing solida, lucida e ripetibile.</h2>
+            <p className="uppercase tracking-[0.3em] text-sm text-secondary font-semibold">I corsi premium</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-primary">Due corsi mirati per fare il salto: marketing che converte e sistemi che scalano.</h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Ogni percorso è pensato per farti smettere di improvvisare e farti ragionare come un decisore: prima le fondamenta, poi la lettura profonda del consumatore, infine la maestria nel progettare sistemi completi.
+              Compila prima la valutazione, poi scegli il corso più adatto: uno sul comportamento del cliente e le leve di marketing, l'altro su processi, delega e governance imprenditoriale.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {levels.map((level) => {
-              const Icon = level.icon;
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {courses.map((course) => {
+              const Icon = course.icon;
               return (
-                <div key={level.key} className="relative group glass-surface-strong rounded-2xl border border-white/60 p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1.5 hover:border-secondary/70 flex flex-col">
+                <div key={course.key} className="relative group glass-surface-strong rounded-2xl border border-white/60 p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1.5 hover:border-secondary/70 flex flex-col">
                   <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-secondary/80 via-white/60 to-secondary/80 rounded-t-2xl opacity-80" />
                   <div className="flex items-start gap-4 mb-4">
                     <div className="h-11 w-11 rounded-xl bg-primary/5 text-primary flex items-center justify-center">
                       <Icon className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{level.key}</p>
-                      <h3 className="text-xl font-bold text-primary">{level.title}</h3>
-                      {level.subtitle ? (
-                        <p className="text-sm text-[rgb(15,23,42)]">{level.subtitle}</p>
-                      ) : null}
+                      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{course.key}</p>
+                      <h3 className="text-xl font-bold text-primary">{course.title}</h3>
                     </div>
                   </div>
 
                   <div className="space-y-3 flex-grow">
-                    <p className="text-base text-foreground">{level.intro}</p>
+                    <p className="text-base text-foreground">{course.intro}</p>
                     <details className="rounded-lg border border-dashed border-border bg-muted/40 px-4 py-3">
                       <summary className="cursor-pointer text-sm font-semibold text-primary leading-relaxed">
-                        Questo percorso è per te se...
+                        Questo corso è per te se...
                       </summary>
                       <ul className="list-disc ml-5 mt-3 space-y-2 text-sm text-muted-foreground">
-                        {level.signals.map((signal) => (
+                        {course.signals.map((signal) => (
                           <li key={signal}>{signal}</li>
                         ))}
                       </ul>
@@ -256,12 +276,11 @@ export default async function Home() {
                       <summary className="cursor-pointer text-sm font-semibold text-primary leading-relaxed">
                         Alla fine sarai in grado di...
                       </summary>
-                      <p className="text-sm text-muted-foreground mt-3">{level.build}</p>
+                      <p className="text-sm text-muted-foreground mt-3">{course.build}</p>
                     </details>
-                    {level.note && <p className="text-xs text-primary font-semibold">{level.note}</p>}
                   </div>
                   <Button variant="outline" asChild className="mt-4">
-                    <Link href={`/percorsi/${level.key}`}>Esplora il percorso</Link>
+                    <Link href="/corsi">Scopri il corso</Link>
                   </Button>
                 </div>
               );

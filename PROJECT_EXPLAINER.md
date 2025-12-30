@@ -27,6 +27,7 @@ What this repo is: a Next.js 14 (App Router, TS, Tailwind) marketing/education s
 - `lib/`: Parsers/loaders (books, articles), Supabase clients, cookie progress tracker, validation schemas.
 - `public/`: Covers, audio, downloads; plus marketing assets.
 - `docs/`: Internal dev notes/migration guides/CTA specs.
+- `app/export-file.md`: instructions for emitting downloadable file content from the CLI (name + fenced code block pattern).
 
 ## Core Flows & Features
 - **Home (`app/page.tsx`)**: Hero + two CTA cards (Risorse, App), top-3 books (by rating) using `getAllBooks()`, and a live-feeling dashboard showing library/progress stats sourced from filesystem + cookies.
@@ -83,3 +84,4 @@ What this repo is: a Next.js 14 (App Router, TS, Tailwind) marketing/education s
 - Auth components under `auth/components` are unused boilerplate for a fuller Supabase auth flow.
 - `content/CTA` snippets exist but CTA injection currently relies on newsletter auto-insert or explicit `{{CTA:...}}` markers.
 - `strs` file in root appears unused (`bn` placeholder).
+- `data/mock-books.ts` is legacy; current book lists come from `content/books` via `lib/books.ts`.
