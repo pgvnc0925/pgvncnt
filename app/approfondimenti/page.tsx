@@ -1,111 +1,157 @@
 import Link from "next/link"
-import Image from "next/image"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Pill, UnderlineAccent, LongformCard, InsightCard } from "@/components/design-system"
 import { getAllArticles } from "@/lib/articles"
-import { Calendar, Tag } from "lucide-react"
 
-export default function ArticoliPage() {
+export const metadata = {
+  title: "Approfondimenti | Pagine Vincenti",
+  description: "Analisi brevi per affinare il tuo approccio strategico",
+}
+
+export default function ContenutiPage() {
   const articles = getAllArticles()
 
+  // Mock longform content
+  const longformContent = [
+    {
+      category: "MARKETING",
+      title: "Marketing Strutturato",
+      description:
+        "Un modello operativo per costruire strategie di marketing sostenibili, basate su analisi e non su intuizioni. Dalla segmentazione alla misurazione, un percorso completo.",
+      readTime: 45,
+      href: "/approfondimenti/marketing-strutturato",
+      saved: false,
+      progress: 0,
+    },
+    {
+      category: "PRICING",
+      title: "Pricing Strategy Framework",
+      description:
+        "Come costruire una strategia di pricing che riflette value, posizionamento ed elasticità della domanda. Un framework in 5 step applicabile immediatamente.",
+      readTime: 38,
+      href: "/approfondimenti/pricing-framework",
+      saved: true,
+      progress: 65,
+    },
+    {
+      category: "METRICHE",
+      title: "La metrica che stai ignorando",
+      description:
+        "Revenue è solo la superficie. Il tasso di conversione per la maggior parte dei business nasconde insights critici. Come calcolare e usare la metrica giusta.",
+      readTime: 28,
+      href: "/approfondimenti/metrica-conversione",
+      saved: false,
+      progress: 0,
+    },
+  ]
+
+  // Mock insights (short articles)
+  const insights = [
+    {
+      tag: "PRICING",
+      date: "15 Dic 2025",
+      title: "Il prezzo non è solo un numero",
+      excerpt:
+        "Prezzo è posizionamento. Una strategy che riflette value percepito, contesto economico e competitive positioning. Un framework in 5 step applicabile immediatamente.",
+      href: "/approfondimenti/prezzo-numero",
+      featured: false,
+    },
+    {
+      tag: "METRICHE",
+      date: "10 Dic 2025",
+      title: "La metrica che stai ignorando",
+      excerpt:
+        "Revenue è più importante del tasso di conversione per la maggior parte dei business, ma nasconde insights. Come calcolare e usare conversion value.",
+      href: "/approfondimenti/metrica-conversione",
+      featured: true,
+    },
+    {
+      tag: "STRATEGIA",
+      date: "5 Dic 2025",
+      title: "Processo decisionale in 4 step",
+      excerpt:
+        "Un framework ripetibile per migliorare le decisioni di marketing con maggiore lucidità e ridurre decisioni basate su 200+ scelte strategiche.",
+      href: "/approfondimenti/processo-decisionale",
+      featured: false,
+    },
+  ]
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex flex-col min-h-screen bg-background">
       <Header />
 
       <main className="flex-grow">
-        <div className="bg-primary py-20 border-b border-secondary/20 relative overflow-hidden">
-          <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-          <div className="container mx-auto px-6 relative z-10 text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-              <span className="text-secondary bg-clip-text text-transparent bg-gradient-to-r from-secondary to-amber-200">Articoli</span> & Risorse
-            </h1>
-            <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-              Approfondimenti, analisi e guide pratiche su business, marketing e produttività.
-              <br className="hidden md:block" />
-              Contenuti basati sui migliori framework internazionali.
+        {/* Hero */}
+        <section className="container mx-auto px-6 py-16 md:py-24">
+          <div className="max-w-4xl mx-auto text-center space-y-6">
+            <Pill variant="accent">Approfondimenti</Pill>
+            <div className="space-y-4">
+              <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight">
+                Approfondiamo le Basi
+                <br />
+                per Decisioni Migliori
+              </h1>
+              <div className="flex justify-center">
+                <UnderlineAccent width="medium" />
+              </div>
+            </div>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Contenuti pensati per chi cerca struttura e profondità. Non troverai
+              trucchi rapidi, ma modelli di pensiero applicabili alla realtà italiana.
             </p>
           </div>
-        </div>
+        </section>
 
-        <div className="container mx-auto px-6 py-16">
-
-          {articles.length === 0 ? (
-            <div className="text-center py-16">
-              <p className="text-xl text-muted-foreground mb-8">
-                Nessun articolo disponibile al momento. Torna presto!
-              </p>
-              <Button asChild>
-                <Link href="/tools">Scopri i nostri tool</Link>
-              </Button>
+        {/* Longform Section - "Libri e guide" */}
+        <section className="container mx-auto px-6 py-12 md:py-20">
+          <div className="max-w-6xl mx-auto space-y-8">
+            {/* Section header */}
+            <div className="flex items-end justify-between">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+                  Analisi e Framework
+                </h2>
+                <p className="text-muted-foreground">
+                  Approfondimenti strutturati per PMI e professionisti
+                </p>
+              </div>
+              <div className="text-sm text-muted-foreground">
+                {longformContent.length} pubblicazioni
+              </div>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {articles.map((article) => (
-                <Card key={article.slug} className="flex flex-col h-full overflow-hidden border-border hover:border-secondary/50 transition-all duration-300 hover:shadow-lg group">
-                  {article.frontmatter.featuredImage && (
-                    <div className="relative w-full h-48 bg-muted overflow-hidden">
-                      <Image
-                        src={article.frontmatter.featuredImage}
-                        alt={article.frontmatter.title}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </div>
-                  )}
 
-                  <CardHeader>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4 text-secondary" />
-                        <span>
-                          {new Date(article.frontmatter.publishedAt).toLocaleDateString('it-IT', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          })}
-                        </span>
-                      </div>
-                    </div>
-                    <CardTitle className="text-xl group-hover:text-primary transition-colors">
-                      <Link href={`/approfondimenti/${article.slug}`}>
-                        {article.frontmatter.title}
-                      </Link>
-                    </CardTitle>
-                    <CardDescription className="mt-2 line-clamp-3">
-                      {article.frontmatter.description}
-                    </CardDescription>
-                  </CardHeader>
-
-                  <CardContent className="flex-grow">
-                    {article.frontmatter.tags && article.frontmatter.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {article.frontmatter.tags.slice(0, 3).map((tag) => (
-                          <span
-                            key={tag}
-                            className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary/10 text-secondary-foreground text-xs font-medium border border-secondary/20"
-                          >
-                            <Tag className="w-3 h-3" />
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </CardContent>
-
-                  <CardFooter>
-                    <Button variant="ghost" asChild className="w-full group-hover:bg-secondary group-hover:text-primary transition-all">
-                      <Link href={`/approfondimenti/${article.slug}`}>
-                        Leggi articolo →
-                      </Link>
-                    </Button>
-                  </CardFooter>
-                </Card>
+            {/* Longform cards */}
+            <div className="space-y-4">
+              {longformContent.map((content, index) => (
+                <LongformCard key={index} {...content} />
               ))}
             </div>
-          )}
-        </div>
+          </div>
+        </section>
+
+        {/* Insights Section - Short articles */}
+        <section className="container mx-auto px-6 py-12 md:py-20 bg-muted/20">
+          <div className="max-w-6xl mx-auto space-y-12">
+            {/* Section header */}
+            <div className="text-center space-y-4">
+              <Pill variant="muted">INSIGHTS RECENTI</Pill>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+                Approfondimenti e riflessioni
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Analisi brevi per affinare il tuo approccio strategico
+              </p>
+            </div>
+
+            {/* Insight cards grid */}
+            <div className="grid md:grid-cols-3 gap-6">
+              {insights.map((insight, index) => (
+                <InsightCard key={index} {...insight} />
+              ))}
+            </div>
+          </div>
+        </section>
       </main>
 
       <Footer />

@@ -21,10 +21,10 @@ export function Header() {
 
         <nav className="hidden md:flex items-center space-x-8">
           <Link
-            href="/corsi"
+            href="/libri"
             className="text-base font-semibold text-primary hover:text-secondary transition-colors"
           >
-            Corsi
+            Libri
           </Link>
           <Link
             href="/valutazione"
@@ -49,6 +49,12 @@ export function Header() {
             className="text-base font-semibold text-primary hover:text-secondary transition-colors"
           >
             Approfondimenti
+          </Link>
+          <Link
+            href="/corsi"
+            className="text-base font-semibold text-primary hover:text-secondary transition-colors"
+          >
+            Corsi
           </Link>
         </nav>
 

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArticleMdxImporter } from "./article-mdx-importer";
+import { AIFAQGenerator } from "./ai/AIFAQGenerator";
 
 interface ArticleFormData {
   title: string;
@@ -84,6 +85,33 @@ export function AddArticleForm({ addArticleAction }: AddArticleFormProps) {
   const addFaq = () => {
     if (formData.faq.length >= MAX_FAQ) return;
     setFormData({ ...formData, faq: [...formData.faq, { ...EMPTY_FAQ }] });
+  };
+
+  const handleAIFAQsGenerated = (generatedFaqs: { question: string; answer: string }[]) => {
+    // Merge generated FAQs with existing ones
+    // Replace empty FAQs first, then add new ones
+    const updatedFaqs = [...formData.faq];
+    let insertIndex = 0;
+
+    generatedFaqs.forEach((generatedFaq) => {
+      // Find next empty slot
+      while (
+        insertIndex < updatedFaqs.length &&
+        (updatedFaqs[insertIndex].question || updatedFaqs[insertIndex].answer)
+      ) {
+        insertIndex++;
+      }
+
+      // If we found an empty slot, replace it; otherwise append
+      if (insertIndex < updatedFaqs.length) {
+        updatedFaqs[insertIndex] = generatedFaq;
+        insertIndex++;
+      } else if (updatedFaqs.length < MAX_FAQ) {
+        updatedFaqs.push(generatedFaq);
+      }
+    });
+
+    setFormData({ ...formData, faq: updatedFaqs });
   };
 
   return (
@@ -269,6 +297,16 @@ export function AddArticleForm({ addArticleAction }: AddArticleFormProps) {
           </p>
         </CardContent>
       </Card>
+
+      {/* AI FAQ Generator */}
+      <AIFAQGenerator
+        title={formData.title}
+        description={formData.description}
+        content={formData.content}
+        currentFAQs={formData.faq}
+        onFAQsGenerated={handleAIFAQsGenerated}
+        maxFAQs={MAX_FAQ}
+      />
 
       <Card>
         <CardHeader>
