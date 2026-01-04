@@ -45,6 +45,18 @@ function resolveCoverPath(slug: string, frontmatterCover?: string): string {
 }
 
 /**
+ * Calculate reading time based on word count
+ * Average reading speed: 200 words per minute
+ */
+function calculateReadingTime(content: string): string {
+  const wordsPerMinute = 200;
+  const wordCount = content.trim().split(/\s+/).length;
+  const minutes = Math.ceil(wordCount / wordsPerMinute);
+
+  return `${minutes} min di lettura`;
+}
+
+/**
  * Parse a single book MDX file
  */
 function parseBookFile(fileName: string): Book | null {
@@ -52,7 +64,7 @@ function parseBookFile(fileName: string): Book | null {
     const slug = fileName.replace(/\.mdx?$/, '');
     const fullPath = path.join(booksDirectory, fileName);
     const fileContents = fs.readFileSync(fullPath, 'utf8');
-    const { data: frontmatter } = matter(fileContents);
+    const { data: frontmatter, content } = matter(fileContents);
 
     const fm = frontmatter as BookFrontmatter;
 
@@ -61,6 +73,9 @@ function parseBookFile(fileName: string): Book | null {
       console.warn(`⚠️  Skipping ${fileName}: missing title in frontmatter`);
       return null;
     }
+
+    // Calculate reading time from content
+    const calculatedReadingTime = calculateReadingTime(content);
 
     return {
       id: slug,
@@ -73,7 +88,7 @@ function parseBookFile(fileName: string): Book | null {
       coverImage: resolveCoverPath(slug, fm.coverImage),
       description: fm.excerpt || fm.metaDescription || '',
       readingTimeFull: fm.readingTimeFull || '',
-      readingTimeSystem: fm.readingTimeSystem || '',
+      readingTimeSystem: fm.readingTimeSystem || calculatedReadingTime,
       tags: Array.isArray(fm.tags) ? fm.tags : [],
       year: fm.year,
       pvCategory: fm.pvCategory,
